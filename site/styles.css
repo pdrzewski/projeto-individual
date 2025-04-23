@@ -1,0 +1,25 @@
+body {
+    font-family: "Roboto Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+    text-align: center;
+}
+
+.titulo {
+    padding-top: 50px;
+    font-size: 30px;
+}
+
+.meio {
+    font-size: 20px;
+}
+
+button {
+    font-size: 30px;
+    margin-top: 50px;
+    border-radius: 9px;
+    border: solid rgb(224, 221, 218);
+    background-color: rgb(224, 221, 218);
+}
