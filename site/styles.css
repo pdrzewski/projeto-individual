@@ -41,7 +41,20 @@ body {
 }
 
 .login {
-    padding-right: 15px;
+    padding: 4px;
+    margin-right: 15px;
+}
+
+.login:hover {
+    background-color: rgb(186, 97, 49);
+}
+
+.cadastro {
+    padding: 4px;
+}
+
+.cadastro:hover {
+    background-color: rgb(186, 97, 49);
 }
 
 .titulo {
