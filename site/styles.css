@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: "Josefin Sans", sans-serif;
 }
 
 :root {
@@ -66,7 +67,7 @@ body {
 #iconNav {
     padding-top: 4px;
     padding-left: 30px;
-    width: 100px;   
+    width: 100px;
 }
 
 li {
@@ -78,6 +79,55 @@ a {
     text-decoration: none;
 }
 
+.container a {
+    color: black;
+    text-decoration: none;
+}
+
 #separar {
     padding-right: 5px;
+}
+
+.container {
+    height: 90vh;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    color: black;
+    font-size: 25px;
+}
+
+.caixa {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #ffffffea;
+    box-shadow: black 8px 8px 8px 0px;
+    gap: 10px;
+    width: 18%;
+    border-radius: 10px;
+    padding: 2%;
+    margin-bottom: 20px;
+}
+
+.botao {
+    background-color: #212e29;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 10px;
+    
+}
+
+input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    font-size: 80%;
 }
