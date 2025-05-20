@@ -1,13 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dados</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
 
-    <h1>teste!</h1>
-    
+<body style="background-color: rgb(22, 22, 22); align-items: center;">
+
+    <div class="header">
+        <div class="navbar">
+            <div class="d_esquerda">
+                <img id="iconNav" src="https://cdn2.steamgriddb.com/icon/b48dd74849193d450c924dedf620968d.ico">
+                <li class="titulo">
+                    <a>Fan Sols</a>
+                </li>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="chart-container">
+        <canvas id="barra"></canvas>
+    </div>
+
 </body>
+
+<script>
+
+    fetch('http://localhost:3333/graficos/dados-grafico')
+    .then(res => res.json())
+    .then(data => {
+      console.log(data); 
+
+      const labels = data.map((_, index) => `Tentativa ${index + 1}`);
+      const valores = data.map(d => d.qtd_acertos);
+
+      const ctx = document.getElementById('barra').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Quantidade de Acertos',
+            data: valores,
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+</script>
+
 </html>

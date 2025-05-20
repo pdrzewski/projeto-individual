@@ -25,6 +25,10 @@
             <input type="password" id="senhaIpt" placeholder="senha">
             <br>
 
+            <label for="senhaIpt">Confirme sua senha:</label>
+            <input type="password" id="senhaConfirmaIpt" placeholder="confirmar senha">
+            <br>
+
             <button class="botao" onclick="cadastrar()">Cadastrar</button>
             <br>
 
@@ -39,8 +43,12 @@
     function cadastrar() {
         var usuario = emailIpt.value
         var senha = senhaIpt.value
+        var senhaConfirma = senhaConfirmaIpt.value
 
-        while (true) {
+        if (senha != senhaConfirma) {
+            alert(`As senhas devem ser iguais!`);
+        } else {
+            while (true) {
             if (usuario.includes('@') && usuario.includes('.com')) {
                 if (senha.length > 9) {
                     if (usuario != '' && usuario.length > 4) {
@@ -57,6 +65,7 @@
                 alert(`O usuario precisa conter @ e .com.`);
             }
             break;
+        }
         }
         fetch("/usuarios/cadastrar", {
             method: "POST",

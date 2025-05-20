@@ -59,15 +59,15 @@ body {
 }
 
 .titulo {
-    padding-top: 30px;
+    padding-top: 20px;
     padding-left: 15px;
     font-size: 60px;
 }
 
 #iconNav {
-    padding-top: 4px;
     padding-left: 30px;
-    width: 100px;
+    padding-bottom: 7px;
+    width: 24%;
 }
 
 li {
@@ -131,4 +131,14 @@ input {
     margin: 8px 0;
     box-sizing: border-box;
     font-size: 80%;
+}
+
+#chart-container {
+    width: 500px;
+    height: 500px;
+}
+
+#barra {
+  width: 600px;
+  height: 400px;
 }
