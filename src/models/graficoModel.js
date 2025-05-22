@@ -13,4 +13,4 @@ function inserirDados(acertos) {
     `
 }
 
-module.exports = { buscarDados };
+module.exports = { buscarDados, inserirDados };
