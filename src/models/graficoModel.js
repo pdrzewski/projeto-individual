@@ -7,4 +7,10 @@ function buscarDados() {
     return database.executar(instrucao);
 }
 
+function inserirDados(acertos) {
+    const insertInstru = `
+        INSERT into votos (qtd_acertos) VALUES (${acertos});
+    `
+}
+
 module.exports = { buscarDados };
