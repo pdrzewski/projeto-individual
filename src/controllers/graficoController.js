@@ -10,4 +10,15 @@ async function obterDados(req, res) {
     }
 }
 
-module.exports = { obterDados };
+async function salvarDados(req, res) {
+    try {
+        const { qtd_acertos } = req.body;
+        await graficoModel.inserirDados(qtd_acertos);
+        res.json({ success: true });
+    } catch (erro) {
+        console.error("Erro ao salvar dados:", erro);
+        res.status(500).json({ erro: "Erro ao salvar dados" });
+    }
+}
+
+module.exports = { obterDados, salvarDados };

@@ -8,9 +8,10 @@ function buscarDados() {
 }
 
 function inserirDados(acertos) {
-    const insertInstru = `
-        INSERT into votos (qtd_acertos) VALUES (${acertos});
-    `
+    const instrucao = `
+        INSERT INTO votos (qtd_acertos) VALUES (${acertos});
+    `;
+    return database.executar(instrucao); // Adicionado return
 }
 
 module.exports = { buscarDados, inserirDados };
