@@ -8,22 +8,27 @@
   <link rel="icon" type="image/x-icon" href="../imagens/icone.ico">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
 </head>
 
 <body style="background-color: rgb(22, 22, 22); align-items: center; color: white;">
   <div class="header">
     <div class="navbar">
-      <div class="d_esquerda">
+      <div class="d_esquerda" id="dados">
         <img id="iconNav" src="https://cdn2.steamgriddb.com/icon/b48dd74849193d450c924dedf620968d.ico">
         <li class="titulo">
           <a>Fan Sols</a>
         </li>
       </div>
+      <div class="d_direita">
+        <span id="userWelcome">Bem-vindo, <span id="userNameDisplay"></span></span>
+    </div>
     </div>
   </div>
 
   <div id="pontuacaoEJogo">
-    <button id="btnIniciarQuiz" onclick="iniciarQuiz()">INICIAR QUIZ</button>
 
     <div id="pontuacao" class="flex-colunar width-fit-content border-primary">
       <div id="pontuacaoDuranteJogo" class="flex-colunar padding-8">
@@ -37,6 +42,8 @@
         <span id="msgFinal" class="width-fit-content">***</span>
       </div>
     </div>
+
+    <button id="btnIniciarQuiz" onclick="iniciarQuiz()">INICIAR QUIZ</button>
 
     <div id="jogo" class="width-fit-content flex-colunar border-secondary">
 
@@ -70,10 +77,6 @@
           <input type="radio" id="quartaOpcao" name="option" class="radio" value="alternativaD" />
           <label for="quartaOpcao" class="option" id="labelOpcaoQuatro"></label>
         </span>
-      </div>
-
-      <div class="d_direita">
-        <span id="userWelcome">Bem-vindo, <span id="userNameDisplay"></span></span>
       </div>
 
       <div id="botoes" class="flex-colunar padding-8">

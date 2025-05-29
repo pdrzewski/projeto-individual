@@ -36,7 +36,7 @@ body {
 }
 
 .navbar .d_direita {
-    padding-top: 15px;
+    padding-top: 2px;
     font-size: 60px;
     padding-right: 10px;
 }
@@ -283,4 +283,12 @@ button {
 #pontuacao {
     width: 80%;
     max-width: 800px;
+}
+
+#btnIniciarQuiz {
+    color: white;
+    background-color: rgb(161, 199, 71);
+    padding: 1%;
+    border-radius: 5px;
+    cursor: pointer;
 }
