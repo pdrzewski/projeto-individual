@@ -287,7 +287,6 @@
       }
     })
 
-    // verifica se resposta assinalada é correta
     options.forEach((option) => {
       if (option.checked === true && option.value === respostaQuestaoAtual) {
         document.getElementById(alternativaCorreta).classList.add("text-success-with-bg")
@@ -344,23 +343,14 @@
 
     textoParaMensagemFinal += "<br> Você acertou " + Math.round((porcentagemFinalDeAcertos) * 100) + "% das questões."
 
-    // Mostra a mensagem final imediatamente
     document.getElementById('msgFinal').innerHTML = textoParaMensagemFinal
     document.getElementById('msgFinal').classList.add(classComCoresParaMensagemFinal)
     document.getElementById('spanPontuacaoFinal').innerHTML = pontuacaoFinal
-
-    // Remover a alteração que poderia estar escondendo a dashboard
-    // Remover esta linha que estava alterando o estilo e causando o desaparecimento da dashboard
-    // document.getElementById('jogo').classList.add("text-new-gray")
-
-    // A dashboard não deve ser escondida, então você pode garantir que a classe não será modificada
-    // document.getElementById('jogo').classList.remove("text-new-gray");  // Caso você tenha usado essa classe em algum outro lugar, remova também
 
     btnProx.disabled = true
     btnSubmeter.disabled = true
     btnTentarNovamente.disabled = false
 
-    // Envia os dados para o servidor
     fetch('http://localhost:3333/graficos/salvar-dados', {
       method: 'POST',
       headers: {
@@ -374,7 +364,6 @@
       .then(response => response.json())
       .then(data => {
         console.log('Sucesso:', data);
-        // Atualiza o gráfico sem recarregar a página
         fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${userId}`)
           .then(res => res.json())
           .then(data => {
@@ -382,7 +371,6 @@
               document.getElementById('userNameDisplay').textContent = data[0].nome;
             }
 
-            // Atualiza o gráfico com os novos dados
             const chart = Chart.getChart('barra');
             if (chart) {
               chart.data.labels = data.map((_, index) => `Tentativa ${index + 1}`);
@@ -406,22 +394,17 @@
       return;
     }
 
-    // Busca os dados do usuário e do gráfico
     fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${userId}`)
       .then(res => res.json())
       .then(data => {
         console.log(data);
 
-        // Exibe o nome do usuário se existir nos dados
         if (data.length > 0 && data[0].nome) {
           document.getElementById('userNameDisplay').textContent = data[0].nome;
         }
-
-        // Prepara dados para o gráfico
         const labels = data.map((_, index) => `Tentativa ${index + 1}`);
         const valores = data.map(d => d.qtd_acertos);
 
-        // Cria o gráfico
         const ctx = document.getElementById('barra').getContext('2d');
         new Chart(ctx, {
           type: 'bar',
@@ -460,22 +443,18 @@
       return;
     }
 
-    // Busca os dados do usuário e do gráfico
     fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${userId}`)
       .then(res => res.json())
       .then(data => {
         console.log(data);
 
-        // Exibe o nome do usuário se existir nos dados
         if (data.length > 0 && data[0].nome) {
           document.getElementById('userNameDisplay').textContent = data[0].nome;
         }
-
-        // Prepara dados para o gráfico
+        
         const labels = data.map((_, index) => `Tentativa ${index + 1}`);
         const valores = data.map(d => d.qtd_acertos);
 
-        // Inicializa o gráfico
         inicializarGrafico(labels, valores);
       })
       .catch(error => {
