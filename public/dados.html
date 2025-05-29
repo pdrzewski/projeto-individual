@@ -72,6 +72,10 @@
         </span>
       </div>
 
+      <div class="d_direita">
+        <span id="userWelcome">Bem-vindo, <span id="userNameDisplay"></span></span>
+      </div>
+
       <div id="botoes" class="flex-colunar padding-8">
         <button onclick="submeter()" id="btnSubmeter">Submeter resposta</button>
         <button onclick="avancar()" id="btnProx" disabled>Avançar para próxima questão</button>
@@ -91,6 +95,9 @@
 
 <script>
 
+  if (sessionStorage.ID_USUARIO == undefined) {
+    window.location('./login.html')
+  }
 
   const listaDeQuestoes = [
 
@@ -150,6 +157,32 @@
   let quantidadeDeQuestoes = listaDeQuestoes.length
   // let isUltima = numeroDaQuestaoAtual == quantidadeDeQuestoes-1 ? true : false
 
+  function inicializarGrafico(labels, valores) {
+    const ctx = document.getElementById('barra').getContext('2d');
+    return new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: `Seus Acertos`,
+          data: valores,
+          backgroundColor: 'rgba(75, 192, 192, 0.5)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
   function onloadEsconder() {
     document.getElementById('pontuacao').style.display = "none"
     document.getElementById('jogo').style.display = "none"
@@ -176,7 +209,7 @@
     numeroDaQuestaoAtual = index
     console.log("questaoAtual")
     console.log(questaoAtual)
-    document.getElementById("spanNumeroDaQuestaoAtual").innerHTML = Number(index) + 1 // ajustando porque o index começa em 0
+    document.getElementById("spanNumeroDaQuestaoAtual").innerHTML = Number(index) + 1
     document.getElementById("spanQuestaoExibida").innerHTML = questaoAtual.pergunta;
     document.getElementById("labelOpcaoUm").innerHTML = questaoAtual.alternativaA;
     document.getElementById("labelOpcaoDois").innerHTML = questaoAtual.alternativaB;
@@ -185,7 +218,7 @@
   }
 
   function submeter() {
-    const options = document.getElementsByName("option"); // recupera alternativas no html
+    const options = document.getElementsByName("option");
 
     let hasChecked = false
     for (let i = 0; i < options.length; i++) {
@@ -294,6 +327,7 @@
     let textoParaMensagemFinal = null
     let classComCoresParaMensagemFinal = null
     const porcentagemFinalDeAcertos = pontuacaoFinal / quantidadeDeQuestoes
+    const userId = sessionStorage.getItem('ID_USUARIO');
 
     if (porcentagemFinalDeAcertos <= 0.3) {
       textoParaMensagemFinal = "Parece que você não estudou..."
@@ -310,69 +344,146 @@
 
     textoParaMensagemFinal += "<br> Você acertou " + Math.round((porcentagemFinalDeAcertos) * 100) + "% das questões."
 
+    // Mostra a mensagem final imediatamente
+    document.getElementById('msgFinal').innerHTML = textoParaMensagemFinal
+    document.getElementById('msgFinal').classList.add(classComCoresParaMensagemFinal)
+    document.getElementById('spanPontuacaoFinal').innerHTML = pontuacaoFinal
+
+    // Remover a alteração que poderia estar escondendo a dashboard
+    // Remover esta linha que estava alterando o estilo e causando o desaparecimento da dashboard
+    // document.getElementById('jogo').classList.add("text-new-gray")
+
+    // A dashboard não deve ser escondida, então você pode garantir que a classe não será modificada
+    // document.getElementById('jogo').classList.remove("text-new-gray");  // Caso você tenha usado essa classe em algum outro lugar, remova também
+
+    btnProx.disabled = true
+    btnSubmeter.disabled = true
+    btnTentarNovamente.disabled = false
+
+    // Envia os dados para o servidor
     fetch('http://localhost:3333/graficos/salvar-dados', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        qtd_acertos: certas
-        })
+        qtd_acertos: certas,
+        user_id: userId
+      })
     })
       .then(response => response.json())
       .then(data => {
         console.log('Sucesso:', data);
-        atualizarGrafico();
+        // Atualiza o gráfico sem recarregar a página
+        fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${userId}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.length > 0 && data[0].nome) {
+              document.getElementById('userNameDisplay').textContent = data[0].nome;
+            }
+
+            // Atualiza o gráfico com os novos dados
+            const chart = Chart.getChart('barra');
+            if (chart) {
+              chart.data.labels = data.map((_, index) => `Tentativa ${index + 1}`);
+              chart.data.datasets[0].data = data.map(d => d.qtd_acertos);
+              chart.update();
+            }
+          });
       })
       .catch((error) => {
         console.error('Erro:', error);
       });
-
-    document.getElementById('msgFinal').innerHTML = textoParaMensagemFinal
-    document.getElementById('msgFinal').classList.add(classComCoresParaMensagemFinal)
-    document.getElementById('spanPontuacaoFinal').innerHTML = pontuacaoFinal
-
-    document.getElementById('jogo').classList.add("text-new-gray")
-
-    btnProx.disabled = true
-    btnSubmeter.disabled = true
-    // btnConcluir.disabled = true
-    btnTentarNovamente.disabled = false
-
   }
 
-  fetch('http://localhost:3333/graficos/dados-grafico')
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
 
-      const labels = data.map((_, index) => `Tentativa ${index + 1}`);
-      const valores = data.map(d => d.qtd_acertos);
+  document.addEventListener('DOMContentLoaded', function () {
+    const userId = sessionStorage.getItem('ID_USUARIO');
 
-      const ctx = document.getElementById('barra').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Quantidade de Acertos',
-            data: valores,
-            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true
+    if (!userId) {
+      alert('Usuário não identificado. Redirecionando para login...');
+      window.location.href = '/login.html';
+      return;
+    }
+
+    // Busca os dados do usuário e do gráfico
+    fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+
+        // Exibe o nome do usuário se existir nos dados
+        if (data.length > 0 && data[0].nome) {
+          document.getElementById('userNameDisplay').textContent = data[0].nome;
+        }
+
+        // Prepara dados para o gráfico
+        const labels = data.map((_, index) => `Tentativa ${index + 1}`);
+        const valores = data.map(d => d.qtd_acertos);
+
+        // Cria o gráfico
+        const ctx = document.getElementById('barra').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              label: `Seus Acertos`,
+              data: valores,
+              backgroundColor: 'rgba(75, 192, 192, 0.5)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true
+              }
             }
           }
-        }
+        });
+      })
+      .catch(error => {
+        console.error('Erro ao carregar dados:', error);
       });
-    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const userId = sessionStorage.getItem('ID_USUARIO');
+
+    if (!userId) {
+      alert('Usuário não identificado. Redirecionando para login...');
+      window.location.href = '/login.html';
+      return;
+    }
+
+    // Busca os dados do usuário e do gráfico
+    fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+
+        // Exibe o nome do usuário se existir nos dados
+        if (data.length > 0 && data[0].nome) {
+          document.getElementById('userNameDisplay').textContent = data[0].nome;
+        }
+
+        // Prepara dados para o gráfico
+        const labels = data.map((_, index) => `Tentativa ${index + 1}`);
+        const valores = data.map(d => d.qtd_acertos);
+
+        // Inicializa o gráfico
+        inicializarGrafico(labels, valores);
+      })
+      .catch(error => {
+        console.error('Erro ao carregar dados:', error);
+      });
+  });
+
+
 </script>
 
 </html>

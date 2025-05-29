@@ -15,8 +15,12 @@
 
 <body background="./imagens/1000005108.jpg">
 
-    <div class="container">
+    <div class="container" id="contCadastro">
         <div class="caixa">
+            <label for="nomeIpt">Digite um nome:</label>
+            <input type="text" id="nomeIpt" placeholder="nome">
+            <br>
+
             <label for="emailIpt">Digite seu email:</label>
             <input type="text" id="emailIpt" placeholder="email">
             <br>
@@ -41,6 +45,7 @@
 <script>
 
     function cadastrar() {
+        var nome = nomeIpt.value
         var usuario = emailIpt.value
         var senha = senhaIpt.value
         var senhaConfirma = senhaConfirmaIpt.value
@@ -75,6 +80,7 @@
             body: JSON.stringify({
                 // crie um atributo que recebe o valor recuperado aqui
                 // Agora vá para o arquivo routes/usuario.js
+                nomeServer: nome,
                 emailServer: usuario,
                 senhaServer: senha
             }),

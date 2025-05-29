@@ -2,7 +2,8 @@ const graficoModel = require('../models/graficoModel');
 
 async function obterDados(req, res) {
     try {
-        const dados = await graficoModel.buscarDados();
+        const idUsuario = req.query.user_id; // Recebe o ID do usuário da query
+        const dados = await graficoModel.buscarDados(idUsuario);
         res.json(dados);
     } catch (erro) {
         console.error("Erro ao buscar dados do gráfico:", erro);
@@ -12,8 +13,8 @@ async function obterDados(req, res) {
 
 async function salvarDados(req, res) {
     try {
-        const { qtd_acertos } = req.body;
-        await graficoModel.inserirDados(qtd_acertos);
+        const { qtd_acertos, user_id } = req.body;
+        await graficoModel.inserirDados(qtd_acertos, user_id);
         res.json({ success: true });
     } catch (erro) {
         console.error("Erro ao salvar dados:", erro);
