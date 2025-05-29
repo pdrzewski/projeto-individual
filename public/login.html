@@ -65,8 +65,8 @@
                 resposta.json().then(json => {
                     console.log(json);
                     console.log(JSON.stringify(json));
+                    sessionStorage.ID_USUARIO = json.id;
                     sessionStorage.EMAIL_USUARIO = json.login;
-                    sessionStorage.SENHA_USUARIO = json.senha;
                     setTimeout(function () {
                         window.location = "./dados.html";
                     }, 1000); // apenas para exibir o loading
