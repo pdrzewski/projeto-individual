@@ -1,21 +1,17 @@
 const database = require('../database/config');
 
-function buscarDados(idUsuario) {
+function buscarDados() {
     const instrucao = `
-        SELECT v.id_usuario, v.qtd_acertos, u.nome 
-        FROM quiz v 
-        INNER JOIN usuario u ON v.id_usuario = u.id
-        WHERE v.id_usuario = ${idUsuario};
+        SELECT qtd_acertos FROM votos; 
     `;
     return database.executar(instrucao);
 }
 
-function inserirDados(acertos, idUsuario) {
+function inserirDados(acertos) {
     const instrucao = `
-        INSERT INTO quiz (qtd_acertos, id_usuario) 
-        VALUES (${acertos}, ${idUsuario});
+        INSERT INTO quiz (qtd_acertos) VALUES (${acertos});
     `;
-    return database.executar(instrucao);
+    return database.executar(instrucao); // Adicionado return
 }
 
 module.exports = { buscarDados, inserirDados };
