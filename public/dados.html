@@ -11,460 +11,272 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+    rel="stylesheet">
 </head>
 
-<body style="background-color: rgb(22, 22, 22); align-items: center; color: white;">
-  <div class="header">
-    <div class="navbar">
-      <div class="d_esquerda" id="dados">
-        <img id="iconNav" src="https://cdn2.steamgriddb.com/icon/b48dd74849193d450c924dedf620968d.ico">
-        <li class="titulo">
-          <a>Fan Sols</a>
-        </li>
-      </div>
-      <div class="d_direita">
-        <span id="userWelcome">Bem-vindo, <span id="userNameDisplay"></span></span>
+<body id="fundoDados"">
+  <div class=" header">
+  <div class="navbar">
+    <div class="d_esquerda" id="dados">
+      <img id="iconNav" src="https://cdn2.steamgriddb.com/icon/b48dd74849193d450c924dedf620968d.ico">
+      <li class="titulo">
+        <a>Fan Sols</a>
+      </li>
     </div>
+    <div class="d_direita">
+      <span id="userWelcome">Bem-vindo, <span id="userNameDisplay"></span></span>
+    </div>
+  </div>
+  </div>
+
+  <div class="centralizaDivQuiz">
+    <div id="pontuacaoEJogo">
+
+      <div id="pontuacao" class="flex-colunar width-fit-content border-primary">
+        <div id="pontuacaoDuranteJogo" class="flex-colunar padding-8">
+          <span class="width-fit-content">Quantidade de acertos: <span id="spanCertas"></span></span>
+          <span class="width-fit-content">Quantidade de erros: <span id="spanErradas"></span></span>
+        </div>
+        <div id="pontuacaoFinalJogo" class="flex-colunar padding-8">
+          <span id="pontuacaoFinal" class="width-fit-content">Pontuação Final:
+            <span id="spanPontuacaoFinal">***</span>
+          </span>
+          <span id="msgFinal" class="width-fit-content">***</span>
+        </div>
+      </div>
+
+      <button id="btnIniciarQuiz" onclick="iniciarQuiz()">INICIAR QUIZ</button>
+
+      <div id="jogo" class="width-fit-content flex-colunar border-secondary">
+
+        <div id="infoQuestao" class="padding-8">
+          <span>Questão atual: <span id="spanNumeroDaQuestaoAtual"></span> de <span id="qtdQuestoes"></span>
+            questões.</span>
+        </div>
+
+        <div id="perguntaDaQuestaoAtual" class="padding-8">
+          <span id="spanQuestaoExibida" class="text-bold"></span>
+        </div>
+
+        <div id="infoAlternativas" class="padding-8">
+          <span><em>Escolha uma opção dentre as abaixo:</em></span>
+        </div>
+
+        <div id="opcoes" class="flex-colunar padding-8">
+          <span>
+            <input type="radio" id="primeiraOpcao" name="option" class="radio" value="alternativaA" />
+            <label for="primeiraOpcao" class="option" id="labelOpcaoUm"></label>
+          </span>
+          <span>
+            <input type="radio" id="segundaOpcao" name="option" class="radio" value="alternativaB" />
+            <label for="segundaOpcao" class="option" id="labelOpcaoDois"></label>
+          </span>
+          <span>
+            <input type="radio" id="terceiraOpcao" name="option" class="radio" value="alternativaC" />
+            <label for="terceiraOpcao" class="option" id="labelOpcaoTres"></label>
+          </span>
+          <span>
+            <input type="radio" id="quartaOpcao" name="option" class="radio" value="alternativaD" />
+            <label for="quartaOpcao" class="option" id="labelOpcaoQuatro"></label>
+          </span>
+        </div>
+
+        <div id="botoes" class="flex-colunar padding-8">
+          <button onclick="submeter()" id="btnSubmeter">Submeter resposta</button>
+          <button onclick="avancar()" id="btnProx" disabled>Avançar para próxima questão</button>
+          <button onclick="tentarNovamente()" id="btnTentarNovamente" disabled>Ver gráficos</button>
+        </div>
+
+      </div>
     </div>
   </div>
 
-  <div id="pontuacaoEJogo">
-
-    <div id="pontuacao" class="flex-colunar width-fit-content border-primary">
-      <div id="pontuacaoDuranteJogo" class="flex-colunar padding-8">
-        <span class="width-fit-content">Quantidade de acertos: <span id="spanCertas"></span></span>
-        <span class="width-fit-content">Quantidade de erros: <span id="spanErradas"></span></span>
-      </div>
-      <div id="pontuacaoFinalJogo" class="flex-colunar padding-8">
-        <span id="pontuacaoFinal" class="width-fit-content">Pontuação Final:
-          <span id="spanPontuacaoFinal">***</span>
-        </span>
-        <span id="msgFinal" class="width-fit-content">***</span>
-      </div>
+  <div class="kpi-container">
+    <div class="kpi-box">
+      <h3>Maior Número de Tentativas</h3>
+      <span id="maiorTentativas">0</span>
     </div>
-
-    <button id="btnIniciarQuiz" onclick="iniciarQuiz()">INICIAR QUIZ</button>
-
-    <div id="jogo" class="width-fit-content flex-colunar border-secondary">
-
-      <div id="infoQuestao" class="padding-8">
-        <span>Questão atual: <span id="spanNumeroDaQuestaoAtual"></span> de <span id="qtdQuestoes"></span>
-          questões.</span>
-      </div>
-
-      <div id="perguntaDaQuestaoAtual" class="padding-8">
-        <span id="spanQuestaoExibida" class="text-bold"></span>
-      </div>
-
-      <div id="infoAlternativas" class="padding-8">
-        <span><em>Escolha uma opção dentre as abaixo:</em></span>
-      </div>
-
-      <div id="opcoes" class="flex-colunar padding-8">
-        <span>
-          <input type="radio" id="primeiraOpcao" name="option" class="radio" value="alternativaA" />
-          <label for="primeiraOpcao" class="option" id="labelOpcaoUm"></label>
-        </span>
-        <span>
-          <input type="radio" id="segundaOpcao" name="option" class="radio" value="alternativaB" />
-          <label for="segundaOpcao" class="option" id="labelOpcaoDois"></label>
-        </span>
-        <span>
-          <input type="radio" id="terceiraOpcao" name="option" class="radio" value="alternativaC" />
-          <label for="terceiraOpcao" class="option" id="labelOpcaoTres"></label>
-        </span>
-        <span>
-          <input type="radio" id="quartaOpcao" name="option" class="radio" value="alternativaD" />
-          <label for="quartaOpcao" class="option" id="labelOpcaoQuatro"></label>
-        </span>
-      </div>
-
-      <div id="botoes" class="flex-colunar padding-8">
-        <button onclick="submeter()" id="btnSubmeter">Submeter resposta</button>
-        <button onclick="avancar()" id="btnProx" disabled>Avançar para próxima questão</button>
-        <!-- <button onclick="finalizar()" id="btnConcluir" disabled>Finalizar Quiz</button> -->
-        <button onclick="tentarNovamente()" id="btnTentarNovamente" disabled>Tentar novamente</button>
-      </div>
-
+    <div class="kpi-box">
+      <h3>Maior Número de Acertos</h3>
+      <span id="maiorAcertos">0</span>
     </div>
   </div>
 
-
-  <div id="chart-container">
-    <canvas id="barra"></canvas>
+  <div centralizaDados>
+    <div id="chart-container">
+      <canvas id="barra"></canvas>
+    </div>
   </div>
 
 </body>
 
 <script>
-
-  if (sessionStorage.ID_USUARIO == undefined) {
-    window.location('./login.html')
+  if (!sessionStorage.ID_USUARIO) {
+    window.location.href = './login.html';
   }
 
-  const listaDeQuestoes = [
+  const questoes = [
+    { pergunta: "Qual é o estilo de jogo de Nine Sols?", alternativaA: "2D-Plataforma", alternativaB: "Triple A", alternativaC: "Terror", alternativaD: "FPS (First Person Shooter)", alternativaCorreta: "alternativaA" },
+    { pergunta: "Quantos Chefões existem no total no jogo?", alternativaA: "Apenas 17 chefões", alternativaB: "Apenas 11 chefões", alternativaC: "Apenas 9 chefões", alternativaD: "Apenas 24 chefões", alternativaCorreta: "alternativaD" },
+    { pergunta: "Quantas habilidades são possiveis de desbloquear no jogo?", alternativaA: "Apenas 36 habilidades", alternativaB: "Apenas 10 habilidades", alternativaC: "Apenas 8 habilidades", alternativaD: "Apenas 24 habilidades", alternativaCorreta: "alternativaA" },
+    { pergunta: "O que são os Sols dentro da historia do jogo?", alternativaA: "São Alienígenas que se passam de gatos", alternativaB: "São gatos que criaram consciência", alternativaC: "São uma raça que controla a Ilha de New Kunlun", alternativaD: "São Humanos modificados", alternativaCorreta: "alternativaC" },
+    { pergunta: "Qual o nome do protagonista e suas intenções?", alternativaA: "Yi e quer ir contra o sistema dos Sols", alternativaB: "ShuanShuan e quer criar nova ordem mundial", alternativaC: "Po e quer se tornar o maior guerreiro", alternativaD: "Xin Zhao e quer defender o seu povo", alternativaCorreta: "alternativaA" }
+  ];
 
-    {
-      pergunta: "Qual é o estilo de jogo de Nine Sols?",
-      alternativaA: "2D-Plataforma",
-      alternativaB: "Triple A",
-      alternativaC: "Terror",
-      alternativaD: "FPS (First Person Shooter)",
-      alternativaCorreta: "alternativaA"
-    },
+  let atual = 0, certas = 0, erradas = 0;
+  const qtdQuestoes = questoes.length;
 
-    {
-      pergunta: "Quantos Chefões existem no total no jogo?",
-      alternativaA: "17",
-      alternativaB: "11",
-      alternativaC: "9",
-      alternativaD: "24",
-      alternativaCorreta: "alternativaD"
-    },
-
-    {
-      pergunta: "Quantas habilidades são possiveis de desbloquear no jogo?",
-      alternativaA: "36",
-      alternativaB: "10",
-      alternativaC: "8",
-      alternativaD: "24",
-      alternativaCorreta: "alternativaA"
-    },
-
-    {
-      pergunta: "O que são os Sols dentro da historia do jogo?",
-      alternativaA: "São Alienígenas que se passam de gatos",
-      alternativaB: "São gatos que criaram consciência",
-      alternativaC: "São uma raça que controla a Ilha de New Kunlun",
-      alternativaD: "São Humanos modificados",
-      alternativaCorreta: "alternativaC"
-    },
-
-    {
-      pergunta: "Qual o nome do protagonista e suas intenções?",
-      alternativaA: "O protagonista se chama Yi e quer ir contra o sistema dos Sols",
-      alternativaB: "O protagonista se chama ShuanShuan e quer criar uma nova ordem mundial",
-      alternativaC: "O protagonista se chama Po e quer se tornar o maior guerreiro",
-      alternativaD: "O protagonista se chama Xin Zhao e quer defender o seu povo",
-      alternativaCorreta: "alternativaA"
-    }
-
-  ]
-
-  // variáveis globais    
-  let numeroDaQuestaoAtual = 0
-  let pontuacaoFinal = 0
-  let tentativaIncorreta = 0
-  let certas = 0
-  let erradas = 0
-  let quantidadeDeQuestoes = listaDeQuestoes.length
-  // let isUltima = numeroDaQuestaoAtual == quantidadeDeQuestoes-1 ? true : false
-
-  function inicializarGrafico(labels, valores) {
-    const ctx = document.getElementById('barra').getContext('2d');
-    return new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{
-          label: `Seus Acertos`,
-          data: valores,
-          backgroundColor: 'rgba(75, 192, 192, 0.5)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-  }
-
-  function onloadEsconder() {
-    document.getElementById('pontuacao').style.display = "none"
-    document.getElementById('jogo').style.display = "none"
+  function id(v) {
+    return document.getElementById(v);
   }
 
   function iniciarQuiz() {
-    document.getElementById('pontuacao').style.display = "flex"
-    document.getElementById('jogo').style.display = "flex"
-    document.getElementById('btnIniciarQuiz').style.display = "none"
-
-    document.getElementById('qtdQuestoes').innerHTML = quantidadeDeQuestoes
-
-    preencherHTMLcomQuestaoAtual(0)
-
-    btnSubmeter.disabled = false
-    btnProx.disabled = true
-    // btnConcluir.disabled = true
-    btnTentarNovamente.disabled = true
+    id('pontuacao').style.display = "flex";
+    id('jogo').style.display = "flex";
+    id('btnIniciarQuiz').style.display = "none";
+    id('qtdQuestoes').textContent = qtdQuestoes;
+    mostrarQuestao(atual);
+    btnSubmeter.disabled = false;
+    btnProx.disabled = true;
+    btnTentarNovamente.disabled = true;
   }
 
-  function preencherHTMLcomQuestaoAtual(index) {
-    habilitarAlternativas(true)
-    const questaoAtual = listaDeQuestoes[index]
-    numeroDaQuestaoAtual = index
-    console.log("questaoAtual")
-    console.log(questaoAtual)
-    document.getElementById("spanNumeroDaQuestaoAtual").innerHTML = Number(index) + 1
-    document.getElementById("spanQuestaoExibida").innerHTML = questaoAtual.pergunta;
-    document.getElementById("labelOpcaoUm").innerHTML = questaoAtual.alternativaA;
-    document.getElementById("labelOpcaoDois").innerHTML = questaoAtual.alternativaB;
-    document.getElementById("labelOpcaoTres").innerHTML = questaoAtual.alternativaC;
-    document.getElementById("labelOpcaoQuatro").innerHTML = questaoAtual.alternativaD;
+  function mostrarQuestao(i) {
+    const q = questoes[i];
+    atual = i;
+    id("spanNumeroDaQuestaoAtual").textContent = i + 1;
+    id("spanQuestaoExibida").textContent = q.pergunta;
+    id("labelOpcaoUm").textContent = q.alternativaA;
+    id("labelOpcaoDois").textContent = q.alternativaB;
+    id("labelOpcaoTres").textContent = q.alternativaC;
+    id("labelOpcaoQuatro").textContent = q.alternativaD;
+    toggleAlternativas(false);
   }
 
   function submeter() {
-    const options = document.getElementsByName("option");
+    const opcoes = document.getElementsByName("option");
+    let marcada = false;
+    for (let i = 0; i < opcoes.length; i++) if (opcoes[i].checked) marcada = true;
+    if (!marcada) return alert("Escolha uma alternativa.");
 
-    let hasChecked = false
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].checked) {
-        hasChecked = true
-        break
+    btnSubmeter.disabled = true;
+    btnProx.disabled = false;
+    toggleAlternativas(true);
+
+    const correta = questoes[atual].alternativaCorreta;
+    let labelCorreta = "";
+
+    for (let i = 0; i < opcoes.length; i++) {
+      if (opcoes[i].value === correta) labelCorreta = opcoes[i].labels[0].id;
+    }
+
+    for (let i = 0; i < opcoes.length; i++) {
+      if (opcoes[i].checked && opcoes[i].value === correta) {
+        id(labelCorreta).classList.add("text-success-with-bg");
+        certas++;
+        id("spanCertas").textContent = certas;
+      } else if (opcoes[i].checked) {
+        const idErrado = opcoes[i].labels[0].id;
+        id(idErrado).classList.add("text-danger-with-bg");
+        id(labelCorreta).classList.add("text-success-with-bg");
+        erradas++;
+        id("spanErradas").textContent = erradas;
       }
     }
-
-    if (!hasChecked) {
-      alert("Não há alternativas escolhidas. Escolha uma opção.")
-    } else {
-      btnSubmeter.disabled = true
-      btnProx.disabled = false
-
-      habilitarAlternativas(false)
-
-      checarResposta()
-    }
-  }
-
-  function habilitarAlternativas(trueOrFalse) {
-    let opcaoEscolhida = trueOrFalse ? false : true
-
-    primeiraOpcao.disabled = opcaoEscolhida
-    segundaOpcao.disabled = opcaoEscolhida
-    terceiraOpcao.disabled = opcaoEscolhida
-    quartaOpcao.disabled = opcaoEscolhida
-
+    atual++;
   }
 
   function avancar() {
-    btnProx.disabled = true
-    btnSubmeter.disabled = false
-
-    desmarcarRadioButtons()
-
-    if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) {
-      preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
-    } else if (numeroDaQuestaoAtual == quantidadeDeQuestoes - 1) {
-      alert("Atenção... a próxima é a ultima questão!")
-      preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
-    } else {
-      finalizarJogo()
-    }
-    limparCoresBackgroundOpcoes()
+    btnProx.disabled = true;
+    btnSubmeter.disabled = false;
+    desmarcarRadios();
+    limparEstilos();
+    if (atual < qtdQuestoes) mostrarQuestao(atual);
+    else finalizar();
   }
 
-  function tentarNovamente() {
-    // atualiza a página
-    window.location.reload()
-  }
+  function finalizar() {
+    const pct = certas / qtdQuestoes;
+    let msg = "", classe = "";
 
-  function checarResposta() {
-    const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual] // questão atual 
-    const respostaQuestaoAtual = questaoAtual.alternativaCorreta // qual é a resposta correta da questão atual
+    if (pct <= 0.3) { msg = "Parece que você não estudou..."; classe = "text-danger-with-bg"; }
+    else if (pct < 0.9) { msg = "Pode melhorar na próxima, hein!"; classe = "text-warning-with-bg"; }
+    else { msg = "Uau, parabéns!"; classe = "text-success-with-bg"; }
 
-    const options = document.getElementsByName("option"); // recupera alternativas no html
+    msg += `<br> Você acertou ${Math.round(pct * 100)}% das questões.`;
+    id("msgFinal").innerHTML = msg;
+    id("msgFinal").classList.add(classe);
+    id("spanPontuacaoFinal").textContent = certas;
 
-    let alternativaCorreta = null // variável para armazenar a alternativa correta
-
-    options.forEach((option) => {
-      if (option.value === respostaQuestaoAtual) {
-        console.log("alternativaCorreta está no componente: " + alternativaCorreta)
-        alternativaCorreta = option.labels[0].id
-      }
-    })
-
-    options.forEach((option) => {
-      if (option.checked === true && option.value === respostaQuestaoAtual) {
-        document.getElementById(alternativaCorreta).classList.add("text-success-with-bg")
-        pontuacaoFinal++
-        certas++
-        document.getElementById("spanCertas").innerHTML = certas
-        numeroDaQuestaoAtual++
-      } else if (option.checked && option.value !== respostaQuestaoAtual) {
-        const wrongLabelId = option.labels[0].id
-
-        document.getElementById(wrongLabelId).classList.add("text-danger-with-bg")
-        document.getElementById(alternativaCorreta).classList.add("text-success-with-bg")
-        tentativaIncorreta++
-        erradas++
-        document.getElementById("spanErradas").innerHTML = erradas
-        numeroDaQuestaoAtual++
-      }
-    })
-  }
-
-  function limparCoresBackgroundOpcoes() {
-    const options = document.getElementsByName("option");
-    options.forEach((option) => {
-      document.getElementById(option.labels[0].id).classList.remove("text-danger-with-bg")
-      document.getElementById(option.labels[0].id).classList.remove("text-success-with-bg")
-    })
-  }
-
-  function desmarcarRadioButtons() {
-    const options = document.getElementsByName("option");
-    for (let i = 0; i < options.length; i++) {
-      options[i].checked = false;
-    }
-  }
-
-  function finalizarJogo() {
-    let textoParaMensagemFinal = null
-    let classComCoresParaMensagemFinal = null
-    const porcentagemFinalDeAcertos = pontuacaoFinal / quantidadeDeQuestoes
-    const userId = sessionStorage.getItem('ID_USUARIO');
-
-    if (porcentagemFinalDeAcertos <= 0.3) {
-      textoParaMensagemFinal = "Parece que você não estudou..."
-      classComCoresParaMensagemFinal = "text-danger-with-bg"
-    }
-    else if (porcentagemFinalDeAcertos > 0.3 && porcentagemFinalDeAcertos < 0.9) {
-      textoParaMensagemFinal = "Pode melhorar na próxima, hein!"
-      classComCoresParaMensagemFinal = "text-warning-with-bg"
-    }
-    else if (porcentagemFinalDeAcertos >= 0.9) {
-      textoParaMensagemFinal = "Uau, parabéns!"
-      classComCoresParaMensagemFinal = "text-success-with-bg"
-    }
-
-    textoParaMensagemFinal += "<br> Você acertou " + Math.round((porcentagemFinalDeAcertos) * 100) + "% das questões."
-
-    document.getElementById('msgFinal').innerHTML = textoParaMensagemFinal
-    document.getElementById('msgFinal').classList.add(classComCoresParaMensagemFinal)
-    document.getElementById('spanPontuacaoFinal').innerHTML = pontuacaoFinal
-
-    btnProx.disabled = true
-    btnSubmeter.disabled = true
-    btnTentarNovamente.disabled = false
+    btnProx.disabled = true;
+    btnSubmeter.disabled = true;
 
     fetch('http://localhost:3333/graficos/salvar-dados', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        qtd_acertos: certas,
-        user_id: userId
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ qtd_acertos: certas, user_id: sessionStorage.ID_USUARIO })
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Sucesso:', data);
-        fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${userId}`)
-          .then(res => res.json())
-          .then(data => {
-            if (data.length > 0 && data[0].nome) {
-              document.getElementById('userNameDisplay').textContent = data[0].nome;
-            }
+      .then(res => res.json())
+      .then(() => carregarGrafico())
+      .catch(console.error);
+  }
 
-            const chart = Chart.getChart('barra');
-            if (chart) {
-              chart.data.labels = data.map((_, index) => `Tentativa ${index + 1}`);
-              chart.data.datasets[0].data = data.map(d => d.qtd_acertos);
-              chart.update();
-            }
-          });
-      })
-      .catch((error) => {
-        console.error('Erro:', error);
-      });
+  function tentarNovamente() {
+    window.location.reload()
   }
 
 
-  document.addEventListener('DOMContentLoaded', function () {
-    const userId = sessionStorage.getItem('ID_USUARIO');
-
-    if (!userId) {
-      alert('Usuário não identificado. Redirecionando para login...');
-      window.location.href = '/login.html';
-      return;
-    }
-
-    fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${userId}`)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-
-        if (data.length > 0 && data[0].nome) {
-          document.getElementById('userNameDisplay').textContent = data[0].nome;
-        }
-        const labels = data.map((_, index) => `Tentativa ${index + 1}`);
-        const valores = data.map(d => d.qtd_acertos);
-
-        const ctx = document.getElementById('barra').getContext('2d');
-        new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels,
-            datasets: [{
-              label: `Seus Acertos`,
-              data: valores,
-              backgroundColor: 'rgba(75, 192, 192, 0.5)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              y: {
-                beginAtZero: true
-              }
-            }
+function carregarGrafico() {
+    fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${sessionStorage.ID_USUARIO}`)
+      .then(r => r.json())
+      .then(d => {
+        if (d.length > 0 && d[0].nome) id('userNameDisplay').textContent = d[0].nome;
+        const lbl = [], val = [];
+        
+        let maiorAcertos = 0;
+        for (let i = 0; i < d.length; i++) {
+          lbl.push(`Tentativa ${i + 1}`);
+          val.push(d[i].qtd_acertos);
+          if (d[i].qtd_acertos > maiorAcertos) {
+            maiorAcertos = d[i].qtd_acertos;
           }
-        });
-      })
-      .catch(error => {
-        console.error('Erro ao carregar dados:', error);
-      });
-  });
-
-  document.addEventListener('DOMContentLoaded', function () {
-    const userId = sessionStorage.getItem('ID_USUARIO');
-
-    if (!userId) {
-      alert('Usuário não identificado. Redirecionando para login...');
-      window.location.href = '/login.html';
-      return;
-    }
-
-    fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${userId}`)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-
-        if (data.length > 0 && data[0].nome) {
-          document.getElementById('userNameDisplay').textContent = data[0].nome;
         }
         
-        const labels = data.map((_, index) => `Tentativa ${index + 1}`);
-        const valores = data.map(d => d.qtd_acertos);
-
-        inicializarGrafico(labels, valores);
+        id('maiorTentativas').textContent = d.length;
+        id('maiorAcertos').textContent = maiorAcertos;
+        
+        const ctx = id('barra').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: { labels: lbl, datasets: [{ label: "Seus Acertos", data: val, backgroundColor: 'rgba(212, 177, 20, 0.5)', borderColor: 'rgba(212, 177, 20, 0.5)', borderWidth: 1 }] },
+          options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+        });
       })
-      .catch(error => {
-        console.error('Erro ao carregar dados:', error);
-      });
-  });
+      .catch(console.error);
+}
 
+  function toggleAlternativas(bloquear) {
+    id('primeiraOpcao').disabled = bloquear;
+    id('segundaOpcao').disabled = bloquear;
+    id('terceiraOpcao').disabled = bloquear;
+    id('quartaOpcao').disabled = bloquear;
+  }
+
+  function limparEstilos() {
+    const op = document.getElementsByName("option");
+    for (let i = 0; i < op.length; i++) {
+      const lblId = op[i].labels[0].id;
+      id(lblId).classList.remove("text-danger-with-bg");
+      id(lblId).classList.remove("text-success-with-bg");
+    }
+  }
+
+  function desmarcarRadios() {
+    const op = document.getElementsByName("option");
+    for (let i = 0; i < op.length; i++) op[i].checked = false;
+  }
+
+  document.addEventListener('DOMContentLoaded', carregarGrafico);
 
 </script>
 
