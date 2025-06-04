@@ -24,7 +24,7 @@
       </li>
     </div>
     <div class="d_direita">
-      <span id="userWelcome">Bem-vindo, <span id="userNameDisplay"></span></span>
+      <span id="userWelcome">Bem-vindo <span id="userNameDisplay"></span></span>
     </div>
   </div>
   </div>
@@ -122,162 +122,209 @@
     { pergunta: "O que são os Sols dentro da historia do jogo?", alternativaA: "São Alienígenas que se passam de gatos", alternativaB: "São gatos que criaram consciência", alternativaC: "São uma raça que controla a Ilha de New Kunlun", alternativaD: "São Humanos modificados", alternativaCorreta: "alternativaC" },
     { pergunta: "Qual o nome do protagonista e suas intenções?", alternativaA: "Yi e quer ir contra o sistema dos Sols", alternativaB: "ShuanShuan e quer criar nova ordem mundial", alternativaC: "Po e quer se tornar o maior guerreiro", alternativaD: "Xin Zhao e quer defender o seu povo", alternativaCorreta: "alternativaA" }
   ];
-
-  let atual = 0, certas = 0, erradas = 0;
-  const qtdQuestoes = questoes.length;
-
-  function id(v) {
-    return document.getElementById(v);
-  }
+  let questaoAtual = 0;
+  let acertos = 0;
+  let erros = 0;
+  const totalQuestoes = questoes.length;
 
   function iniciarQuiz() {
-    id('pontuacao').style.display = "flex";
-    id('jogo').style.display = "flex";
-    id('btnIniciarQuiz').style.display = "none";
-    id('qtdQuestoes').textContent = qtdQuestoes;
-    mostrarQuestao(atual);
-    btnSubmeter.disabled = false;
-    btnProx.disabled = true;
-    btnTentarNovamente.disabled = true;
+    document.getElementById('pontuacao').style.display = "flex";
+    document.getElementById('jogo').style.display = "flex";
+    document.getElementById('btnIniciarQuiz').style.display = "none";
+    document.getElementById('qtdQuestoes').textContent = totalQuestoes;
+
+    mostrarQuestao(questaoAtual);
+    document.getElementById('btnSubmeter').disabled = false;
   }
 
-  function mostrarQuestao(i) {
-    const q = questoes[i];
-    atual = i;
-    id("spanNumeroDaQuestaoAtual").textContent = i + 1;
-    id("spanQuestaoExibida").textContent = q.pergunta;
-    id("labelOpcaoUm").textContent = q.alternativaA;
-    id("labelOpcaoDois").textContent = q.alternativaB;
-    id("labelOpcaoTres").textContent = q.alternativaC;
-    id("labelOpcaoQuatro").textContent = q.alternativaD;
-    toggleAlternativas(false);
+  function mostrarQuestao(numero) {
+    const questao = questoes[numero];
+
+    document.getElementById("spanNumeroDaQuestaoAtual").textContent = numero + 1;
+    document.getElementById("spanQuestaoExibida").textContent = questao.pergunta;
+    document.getElementById("labelOpcaoUm").textContent = questao.alternativaA;
+    document.getElementById("labelOpcaoDois").textContent = questao.alternativaB;
+    document.getElementById("labelOpcaoTres").textContent = questao.alternativaC;
+    document.getElementById("labelOpcaoQuatro").textContent = questao.alternativaD;
+
+    alternativasAtivas(true);
   }
 
   function submeter() {
     const opcoes = document.getElementsByName("option");
-    let marcada = false;
-    for (let i = 0; i < opcoes.length; i++) if (opcoes[i].checked) marcada = true;
-    if (!marcada) return alert("Escolha uma alternativa.");
+    let respostaSelecionada = false;
 
-    btnSubmeter.disabled = true;
-    btnProx.disabled = false;
-    toggleAlternativas(true);
-
-    const correta = questoes[atual].alternativaCorreta;
-    let labelCorreta = "";
-
-    for (let i = 0; i < opcoes.length; i++) {
-      if (opcoes[i].value === correta) labelCorreta = opcoes[i].labels[0].id;
+    for (let opcao of opcoes) {
+      if (opcao.checked) respostaSelecionada = true;
     }
 
-    for (let i = 0; i < opcoes.length; i++) {
-      if (opcoes[i].checked && opcoes[i].value === correta) {
-        id(labelCorreta).classList.add("text-success-with-bg");
-        certas++;
-        id("spanCertas").textContent = certas;
-      } else if (opcoes[i].checked) {
-        const idErrado = opcoes[i].labels[0].id;
-        id(idErrado).classList.add("text-danger-with-bg");
-        id(labelCorreta).classList.add("text-success-with-bg");
-        erradas++;
-        id("spanErradas").textContent = erradas;
+    if (!respostaSelecionada) {
+      alert("Por favor, escolha uma resposta!");
+      return;
+    }
+
+    document.getElementById('btnSubmeter').disabled = true;
+    document.getElementById('btnProx').disabled = false;
+    alternativasAtivas(false);
+
+    const respostaCerta = questoes[questaoAtual].alternativaCorreta;
+
+    for (let opcao of opcoes) {
+      if (opcao.checked) {
+        if (opcao.value === respostaCerta) {
+          document.getElementById(opcao.labels[0].id).classList.add("text-success-with-bg");
+          acertos++;
+          document.getElementById("spanCertas").textContent = acertos;
+        } else {
+          document.getElementById(opcao.labels[0].id).classList.add("text-danger-with-bg");
+          for (let op of opcoes) {
+            if (op.value === respostaCerta) {
+              document.getElementById(op.labels[0].id).classList.add("text-success-with-bg");
+            }
+          }
+          erros++;
+          document.getElementById("spanErradas").textContent = erros;
+        }
       }
     }
-    atual++;
+
+    questaoAtual++;
   }
 
   function avancar() {
-    btnProx.disabled = true;
-    btnSubmeter.disabled = false;
-    desmarcarRadios();
+    document.getElementById('btnProx').disabled = true;
+    document.getElementById('btnSubmeter').disabled = false;
+
+    limparSelecoes();
     limparEstilos();
-    if (atual < qtdQuestoes) mostrarQuestao(atual);
-    else finalizar();
-  }
 
-  function finalizar() {
-    const pct = certas / qtdQuestoes;
-    let msg = "", classe = "";
-
-    if (pct <= 0.3) { msg = "Parece que você não estudou..."; classe = "text-danger-with-bg"; }
-    else if (pct < 0.9) { msg = "Pode melhorar na próxima, hein!"; classe = "text-warning-with-bg"; }
-    else { msg = "Uau, parabéns!"; classe = "text-success-with-bg"; }
-
-    msg += `<br> Você acertou ${Math.round(pct * 100)}% das questões.`;
-    id("msgFinal").innerHTML = msg;
-    id("msgFinal").classList.add(classe);
-    id("spanPontuacaoFinal").textContent = certas;
-
-    btnProx.disabled = true;
-    btnSubmeter.disabled = true;
-
-    fetch('http://localhost:3333/graficos/salvar-dados', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ qtd_acertos: certas, user_id: sessionStorage.ID_USUARIO })
-    })
-      .then(res => res.json())
-      .then(() => carregarGrafico())
-      .catch(console.error);
-  }
-
-  function tentarNovamente() {
-    window.location.reload()
-  }
-
-
-function carregarGrafico() {
-    fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${sessionStorage.ID_USUARIO}`)
-      .then(r => r.json())
-      .then(d => {
-        if (d.length > 0 && d[0].nome) id('userNameDisplay').textContent = d[0].nome;
-        const lbl = [], val = [];
-        
-        let maiorAcertos = 0;
-        for (let i = 0; i < d.length; i++) {
-          lbl.push(`Tentativa ${i + 1}`);
-          val.push(d[i].qtd_acertos);
-          if (d[i].qtd_acertos > maiorAcertos) {
-            maiorAcertos = d[i].qtd_acertos;
-          }
-        }
-        
-        id('maiorTentativas').textContent = d.length;
-        id('maiorAcertos').textContent = maiorAcertos;
-        
-        const ctx = id('barra').getContext('2d');
-        new Chart(ctx, {
-          type: 'bar',
-          data: { labels: lbl, datasets: [{ label: "Seus Acertos", data: val, backgroundColor: 'rgba(212, 177, 20, 0.5)', borderColor: 'rgba(212, 177, 20, 0.5)', borderWidth: 1 }] },
-          options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-        });
-      })
-      .catch(console.error);
-}
-
-  function toggleAlternativas(bloquear) {
-    id('primeiraOpcao').disabled = bloquear;
-    id('segundaOpcao').disabled = bloquear;
-    id('terceiraOpcao').disabled = bloquear;
-    id('quartaOpcao').disabled = bloquear;
-  }
-
-  function limparEstilos() {
-    const op = document.getElementsByName("option");
-    for (let i = 0; i < op.length; i++) {
-      const lblId = op[i].labels[0].id;
-      id(lblId).classList.remove("text-danger-with-bg");
-      id(lblId).classList.remove("text-success-with-bg");
+    if (questaoAtual < totalQuestoes) {
+      mostrarQuestao(questaoAtual);
+    } else {
+      finalizarQuiz();
     }
   }
 
-  function desmarcarRadios() {
-    const op = document.getElementsByName("option");
-    for (let i = 0; i < op.length; i++) op[i].checked = false;
+  function finalizarQuiz() {
+    const porcentagem = (acertos / totalQuestoes) * 100;
+    let mensagem = "";
+    let classe = "";
+
+    if (porcentagem <= 30) {
+      mensagem = "Parece que você não estudou...";
+      classe = "text-danger-with-bg";
+    } else if (porcentagem < 90) {
+      mensagem = "Pode melhorar na próxima!";
+      classe = "text-warning-with-bg";
+    } else {
+      mensagem = "Uau, parabéns!";
+      classe = "text-success-with-bg";
+    }
+
+    mensagem += `<br>Você acertou ${Math.round(porcentagem)}% das questões.`;
+
+    document.getElementById("msgFinal").innerHTML = mensagem;
+    document.getElementById("msgFinal").classList.add(classe);
+    document.getElementById("spanPontuacaoFinal").textContent = acertos;
+
+    document.getElementById('btnProx').disabled = true;
+    document.getElementById('btnSubmeter').disabled = true;
+    document.getElementById('btnTentarNovamente').disabled = false;
+
+    salvarDados();
+  }
+
+  function tentarNovamente() {
+    window.location.reload();
+  }
+
+  function alternativasAtivas(ativo) {
+    document.getElementById('primeiraOpcao').disabled = !ativo;
+    document.getElementById('segundaOpcao').disabled = !ativo;
+    document.getElementById('terceiraOpcao').disabled = !ativo;
+    document.getElementById('quartaOpcao').disabled = !ativo;
+  }
+
+  function limparEstilos() {
+    const opcoes = document.getElementsByName("option");
+    for (let opcao of opcoes) {
+      const labelId = opcao.labels[0].id;
+      document.getElementById(labelId).classList.remove("text-danger-with-bg");
+      document.getElementById(labelId).classList.remove("text-success-with-bg");
+    }
+  }
+
+  function limparSelecoes() {
+    const opcoes = document.getElementsByName("option");
+    for (let opcao of opcoes) {
+      opcao.checked = false;
+    }
+  }
+
+  function salvarDados() {
+    fetch('http://localhost:3333/graficos/salvar-dados', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        qtd_acertos: acertos,
+        user_id: sessionStorage.ID_USUARIO
+      })
+    })
+      .then(response => response.json())
+      .then(() => carregarGrafico())
+      .catch(erro => console.error('Erro:', erro));
+  }
+
+  function carregarGrafico() {
+    fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${sessionStorage.ID_USUARIO}`)
+      .then(response => response.json())
+      .then(dados => {
+        if (dados.length > 0 && dados[0].nome) {
+          document.getElementById('userNameDisplay').textContent = dados[0].nome;
+        }
+
+        const tentativas = [];
+        const pontuacoes = [];
+        let melhorPontuacao = 0;
+
+        for (let i = 0; i < dados.length; i++) {
+          tentativas.push(`Tentativa ${i + 1}`);
+          pontuacoes.push(dados[i].qtd_acertos);
+
+          if (dados[i].qtd_acertos > melhorPontuacao) {
+            melhorPontuacao = dados[i].qtd_acertos;
+          }
+        }
+
+        document.getElementById('maiorTentativas').textContent = dados.length;
+        document.getElementById('maiorAcertos').textContent = melhorPontuacao;
+
+        const contexto = document.getElementById('barra').getContext('2d');
+        new Chart(contexto, {
+          type: 'bar',
+          data: {
+            labels: tentativas,
+            datasets: [{
+              label: "Seus Acertos",
+              data: pontuacoes,
+              backgroundColor: 'rgba(212, 177, 20, 0.5)',
+              borderColor: 'rgba(212, 177, 20, 0.5)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      })
+      .catch(erro => console.error('Erro:', erro));
   }
 
   document.addEventListener('DOMContentLoaded', carregarGrafico);
-
 </script>
 
 </html>
