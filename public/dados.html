@@ -14,19 +14,22 @@
     rel="stylesheet">
 </head>
 
-<body id="fundoDados"">
+<body id="fundoDados">
   <div class=" header">
   <div class="navbar">
-    <div class="d_esquerda" id="dados">
+    <div onclick="voltaPagina()" class="d_esquerda" id="dados">
       <img id="iconNav" src="https://cdn2.steamgriddb.com/icon/b48dd74849193d450c924dedf620968d.ico">
       <li class="titulo">
         <a>Fan Sols</a>
       </li>
     </div>
-    <div class="d_direita">
-      <span id="userWelcome">Bem-vindo <span id="userNameDisplay"></span></span>
+    <div class="d_direita" id="inicial">
+      <li class="login">
+        <a href="login.html">Login</a>
+      </li>
+      <li id="separar">|</li>
+      <li class="cadastro"><a href="cadastro.html">Cadastro</a></li>
     </div>
-  </div>
   </div>
 
   <div class="centralizaDivQuiz">
@@ -115,6 +118,10 @@
     window.location.href = './login.html';
   }
 
+  function voltaPagina () {
+    window.location.href = './index.html';
+  }
+
   const questoes = [
     { pergunta: "Qual é o estilo de jogo de Nine Sols?", alternativaA: "2D-Plataforma", alternativaB: "Triple A", alternativaC: "Terror", alternativaD: "FPS (First Person Shooter)", alternativaCorreta: "alternativaA" },
     { pergunta: "Quantos Chefões existem no total no jogo?", alternativaA: "Apenas 17 chefões", alternativaB: "Apenas 11 chefões", alternativaC: "Apenas 9 chefões", alternativaD: "Apenas 24 chefões", alternativaCorreta: "alternativaD" },
@@ -154,8 +161,8 @@
     const opcoes = document.getElementsByName("option");
     let respostaSelecionada = false;
 
-    for (let opcao of opcoes) {
-      if (opcao.checked) respostaSelecionada = true;
+    for (let i = 0; i < opcoes.length; i++) {
+      if (opcoes[i].checked) respostaSelecionada = true;
     }
 
     if (!respostaSelecionada) {
@@ -169,17 +176,17 @@
 
     const respostaCerta = questoes[questaoAtual].alternativaCorreta;
 
-    for (let opcao of opcoes) {
-      if (opcao.checked) {
-        if (opcao.value === respostaCerta) {
-          document.getElementById(opcao.labels[0].id).classList.add("text-success-with-bg");
+    for (let i = 0; i < opcoes.length; i++) {
+      if (opcoes[i].checked) {
+        if (opcoes[i].value === respostaCerta) {
+          document.getElementById(opcoes[i].labels[0].id).classList.add("text-success-with-bg");
           acertos++;
           document.getElementById("spanCertas").textContent = acertos;
         } else {
-          document.getElementById(opcao.labels[0].id).classList.add("text-danger-with-bg");
-          for (let op of opcoes) {
-            if (op.value === respostaCerta) {
-              document.getElementById(op.labels[0].id).classList.add("text-success-with-bg");
+          document.getElementById(opcoes[i].labels[0].id).classList.add("text-danger-with-bg");
+          for (let j = 0; j < opcoes.length; j++) {
+            if (opcoes[j].value === respostaCerta) {
+              document.getElementById(opcoes[j].labels[0].id).classList.add("text-success-with-bg");
             }
           }
           erros++;
@@ -221,7 +228,7 @@
       classe = "text-success-with-bg";
     }
 
-    mensagem += `<br>Você acertou ${Math.round(porcentagem)}% das questões.`;
+    mensagem += "<br>Você acertou " + Math.round(porcentagem) + "% das questões.";
 
     document.getElementById("msgFinal").innerHTML = mensagem;
     document.getElementById("msgFinal").classList.add(classe);
@@ -247,8 +254,8 @@
 
   function limparEstilos() {
     const opcoes = document.getElementsByName("option");
-    for (let opcao of opcoes) {
-      const labelId = opcao.labels[0].id;
+    for (let i = 0; i < opcoes.length; i++) {
+      const labelId = opcoes[i].labels[0].id;
       document.getElementById(labelId).classList.remove("text-danger-with-bg");
       document.getElementById(labelId).classList.remove("text-success-with-bg");
     }
@@ -256,8 +263,8 @@
 
   function limparSelecoes() {
     const opcoes = document.getElementsByName("option");
-    for (let opcao of opcoes) {
-      opcao.checked = false;
+    for (let i = 0; i < opcoes.length; i++) {
+      opcoes[i].checked = false;
     }
   }
 
@@ -270,25 +277,22 @@
         user_id: sessionStorage.ID_USUARIO
       })
     })
-      .then(response => response.json())
-      .then(() => carregarGrafico())
-      .catch(erro => console.error('Erro:', erro));
+      .then(function (response) { return response.json(); })
+      .then(function () { carregarGrafico(); })
+      .catch(function (erro) { console.error('Erro:', erro); });
   }
 
   function carregarGrafico() {
-    fetch(`http://localhost:3333/graficos/dados-grafico?user_id=${sessionStorage.ID_USUARIO}`)
-      .then(response => response.json())
-      .then(dados => {
-        if (dados.length > 0 && dados[0].nome) {
-          document.getElementById('userNameDisplay').textContent = dados[0].nome;
-        }
+    fetch('http://localhost:3333/graficos/dados-grafico?user_id=' + sessionStorage.ID_USUARIO)
+      .then(function (response) { return response.json(); })
+      .then(function (dados) {
 
         const tentativas = [];
         const pontuacoes = [];
         let melhorPontuacao = 0;
 
         for (let i = 0; i < dados.length; i++) {
-          tentativas.push(`Tentativa ${i + 1}`);
+          tentativas.push("Tentativa " + (i + 1));
           pontuacoes.push(dados[i].qtd_acertos);
 
           if (dados[i].qtd_acertos > melhorPontuacao) {
@@ -321,7 +325,7 @@
           }
         });
       })
-      .catch(erro => console.error('Erro:', erro));
+      .catch(function (erro) { console.error('Erro:', erro); });
   }
 
   document.addEventListener('DOMContentLoaded', carregarGrafico);
